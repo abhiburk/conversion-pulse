@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\RankCampaigns;
 use App\Actions\SummarizeEvents;
+use App\Enums\AlertStatus;
 use App\Http\Requests\AnalyticsRangeRequest;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -23,6 +24,7 @@ class DashboardController extends Controller
             'analytics' => $summarizeEvents->handle($workspace, $range),
             'campaigns' => $rankCampaigns->handle($workspace, $range),
             'hasSites' => $workspace->sites()->exists(),
+            'openAlerts' => $workspace->alerts()->where('status', AlertStatus::Open)->count(),
         ]);
     }
 }

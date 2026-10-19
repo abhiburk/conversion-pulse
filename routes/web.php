@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AlertAcknowledgementController;
+use App\Http\Controllers\AlertController;
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventPipelineController;
@@ -18,6 +20,9 @@ Route::middleware(['auth', 'verified', 'workspace'])->group(function () {
     Route::get('pipeline', [EventPipelineController::class, 'index'])->name('pipeline.index');
     Route::post('pipeline/failed-events/retry', [FailedEventRetryController::class, 'storeAll'])->name('failed-events.retry-all');
     Route::post('pipeline/failed-events/{ingestedEvent}/retry', [FailedEventRetryController::class, 'store'])->name('failed-events.retry');
+
+    Route::get('alerts', [AlertController::class, 'index'])->name('alerts.index');
+    Route::post('alerts/{alert}/acknowledgement', [AlertAcknowledgementController::class, 'store'])->name('alerts.acknowledge');
 });
 
 require __DIR__.'/settings.php';

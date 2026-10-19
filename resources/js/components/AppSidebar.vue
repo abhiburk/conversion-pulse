@@ -2,12 +2,14 @@
 import { Link } from '@inertiajs/vue3';
 import {
     Activity,
+    BellRing,
     BookOpen,
     FolderGit2,
     Globe,
     LayoutGrid,
     Megaphone,
 } from '@lucide/vue';
+import AlertController from '@/actions/App/Http/Controllers/AlertController';
 import CampaignController from '@/actions/App/Http/Controllers/CampaignController';
 import EventPipelineController from '@/actions/App/Http/Controllers/EventPipelineController';
 import SiteController from '@/actions/App/Http/Controllers/SiteController';
@@ -47,6 +49,11 @@ const mainNavItems: NavItem[] = [
         title: 'Event pipeline',
         href: EventPipelineController.index(),
         icon: Activity,
+    },
+    {
+        title: 'Alerts',
+        href: AlertController.index(),
+        icon: BellRing,
     },
 ];
 

@@ -98,3 +98,22 @@ export type CampaignPerformance = {
     click_through_rate: number | null;
     conversion_rate: number | null;
 };
+
+export type AlertType =
+    | 'volume_drop'
+    | 'processing_failures'
+    | 'processing_stalled';
+
+export type MonitoringAlert = {
+    id: number;
+    type: AlertType;
+    label: string;
+    summary: string;
+    site: SiteSummary;
+    campaign: { id: number; name: string } | null;
+    triggered_at: string;
+    last_evaluated_at: string;
+    acknowledged_at: string | null;
+    acknowledged_by: string | null;
+    resolved_at: string | null;
+};

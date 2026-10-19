@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\EventType;
+use App\Models\Alert;
 use App\Models\Campaign;
 use App\Models\EventRollup;
 use App\Models\Site;
@@ -56,3 +57,15 @@ test('invalid ranges are rejected with a message', function (array $query, strin
     'future end' => [['range' => 'custom', 'from' => '2026-10-10', 'to' => '2026-10-25'], 'to', 'The to field must be a date before or equal to today.'],
     'longer than 90 days' => [['range' => 'custom', 'from' => '2026-06-01', 'to' => '2026-10-01'], 'to', 'Choose a range of at most 90 days.'],
 ]);
+
+test('the dashboard counts open alerts in the current workspace', function () {
+    $user = User::factory()->withWorkspace()->create();
+    $site = Site::factory()->for($user->currentWorkspace)->create();
+    Alert::factory()->for($site)->create();
+    Alert::factory()->for($site)->resolved()->create();
+    Alert::factory()->create();
+
+    $response = $this->actingAs($user)->get(route('dashboard'));
+
+    $response->assertInertia(fn (Assert $page) => $page->where('openAlerts', 1));
+});

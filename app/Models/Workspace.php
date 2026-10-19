@@ -63,4 +63,14 @@ class Workspace extends Model
     {
         return $this->hasMany(IngestedEvent::class);
     }
+
+    /**
+     * Get the monitoring alerts raised for the workspace.
+     *
+     * @return HasMany<Alert, $this>
+     */
+    public function alerts(): HasMany
+    {
+        return $this->hasMany(Alert::class);
+    }
 }

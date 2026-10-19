@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
-import { Globe, TriangleAlert } from '@lucide/vue';
+import { BellRing, Globe, TriangleAlert } from '@lucide/vue';
+import AlertController from '@/actions/App/Http/Controllers/AlertController';
 import { computed, ref } from 'vue';
 import CampaignController from '@/actions/App/Http/Controllers/CampaignController';
 import DashboardController from '@/actions/App/Http/Controllers/DashboardController';
@@ -33,6 +34,7 @@ const props = defineProps<{
     analytics: Analytics;
     campaigns: CampaignPerformance[];
     hasSites: boolean;
+    openAlerts: number;
 }>();
 
 const { loading, apply } = useAnalyticsRange(() =>
@@ -72,6 +74,26 @@ const countTiles = computed(() =>
             />
             <RangePicker :filters="filters" @change="apply" />
         </div>
+
+        <Link
+            v-if="openAlerts > 0"
+            :href="AlertController.index()"
+            class="flex items-center gap-3 rounded-xl border border-[#d03b3b]/40 bg-[#d03b3b]/5 p-4 text-sm transition-colors hover:bg-[#d03b3b]/10"
+        >
+            <BellRing class="size-5 shrink-0 text-[#d03b3b]" />
+            <span class="flex-1">
+                <span class="font-medium"
+                    >{{ openAlerts }} open
+                    {{ openAlerts === 1 ? 'alert' : 'alerts' }}</span
+                >
+                <span class="text-muted-foreground">
+                    · Tracking problems need attention</span
+                >
+            </span>
+            <span class="font-medium underline underline-offset-4"
+                >View alerts</span
+            >
+        </Link>
 
         <div
             v-if="!hasSites"
