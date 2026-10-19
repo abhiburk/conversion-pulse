@@ -2,10 +2,13 @@
 
 use App\Enums\EventStatus;
 use App\Enums\EventType;
+use App\Jobs\ProcessIngestedEvent;
 use App\Models\Campaign;
+use App\Models\EventRollup;
 use App\Models\IngestedEvent;
 use App\Models\Site;
 use Illuminate\Database\UniqueConstraintViolationException;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Str;
 
 /**
@@ -40,6 +43,7 @@ beforeEach(function () {
 });
 
 test('a valid batch is stored for the site and returns 202', function () {
+    Queue::fake();
     $campaign = Campaign::factory()->create();
     $site = $campaign->site;
 
@@ -240,4 +244,26 @@ test('event times in the future are clamped to the time they were received', fun
     $event = IngestedEvent::sole();
     expect($event->occurred_at->equalTo(now()))->toBeTrue();
     expect($event->type)->toBe(EventType::PageView);
+});
+
+test('accepted events are queued for processing', function () {
+    Queue::fake();
+    $site = Site::factory()->create();
+
+    $this->postJson(ingestUrl($site), ['events' => [trackingEvent(), trackingEvent()]]);
+
+    Queue::assertPushed(ProcessIngestedEvent::class, 2);
+    expect(IngestedEvent::whereNull('dispatched_at')->count())->toBe(0);
+});
+
+test('ingested events are processed into rollups by the worker', function () {
+    $campaign = Campaign::factory()->create();
+
+    $this->postJson(ingestUrl($campaign->site), ['events' => [
+        trackingEvent(['type' => 'campaign_impression', 'campaign_id' => $campaign->public_id]),
+        trackingEvent(['type' => 'campaign_impression', 'campaign_id' => $campaign->public_id]),
+    ]]);
+
+    expect(IngestedEvent::where('status', EventStatus::Processed)->count())->toBe(2);
+    expect(EventRollup::where('campaign_id', $campaign->id)->sole()->count)->toBe(2);
 });

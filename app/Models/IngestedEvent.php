@@ -27,9 +27,11 @@ use Illuminate\Support\Carbon;
  * @property Carbon $occurred_at
  * @property Carbon $received_at
  * @property EventStatus $status
+ * @property Carbon|null $dispatched_at
  * @property int $attempts
  * @property string|null $last_error
  * @property Carbon|null $processed_at
+ * @property Carbon|null $failed_at
  */
 class IngestedEvent extends Model
 {
@@ -56,7 +58,9 @@ class IngestedEvent extends Model
             'properties' => 'array',
             'occurred_at' => 'datetime',
             'received_at' => 'datetime',
+            'dispatched_at' => 'datetime',
             'processed_at' => 'datetime',
+            'failed_at' => 'datetime',
         ];
     }
 

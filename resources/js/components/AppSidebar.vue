@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import {
+    Activity,
     BookOpen,
     FolderGit2,
     Globe,
@@ -8,6 +9,7 @@ import {
     Megaphone,
 } from '@lucide/vue';
 import CampaignController from '@/actions/App/Http/Controllers/CampaignController';
+import EventPipelineController from '@/actions/App/Http/Controllers/EventPipelineController';
 import SiteController from '@/actions/App/Http/Controllers/SiteController';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
@@ -40,6 +42,11 @@ const mainNavItems: NavItem[] = [
         title: 'Sites',
         href: SiteController.index(),
         icon: Globe,
+    },
+    {
+        title: 'Event pipeline',
+        href: EventPipelineController.index(),
+        icon: Activity,
     },
 ];
 

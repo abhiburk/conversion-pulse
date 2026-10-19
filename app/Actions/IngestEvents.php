@@ -15,6 +15,8 @@ use Illuminate\Validation\Rule;
 
 class IngestEvents
 {
+    public function __construct(private DispatchEventProcessing $dispatchEventProcessing) {}
+
     /**
      * Validate and durably store a batch of events for a site.
      *
@@ -45,11 +47,33 @@ class IngestEvents
 
         $accepted = $rows === [] ? 0 : IngestedEvent::query()->insertOrIgnore($rows);
 
+        $this->queueProcessing($site, $rows);
+
         return [
             'accepted' => $accepted,
             'duplicates' => count($rows) - $accepted,
             'rejected' => $rejected,
         ];
+    }
+
+    /**
+     * Queue every event from the batch that is still pending. This includes duplicates of events whose earlier processing has not finished yet, which is harmless because processing claims each event once.
+     *
+     * @param  list<array<string, mixed>>  $rows
+     */
+    private function queueProcessing(Site $site, array $rows): void
+    {
+        if ($rows === []) {
+            return;
+        }
+
+        $this->dispatchEventProcessing->handle(
+            IngestedEvent::query()
+                ->where('site_id', $site->id)
+                ->whereIn('event_id', array_column($rows, 'event_id'))
+                ->where('status', EventStatus::Pending)
+                ->pluck('id'),
+        );
     }
 
     /**

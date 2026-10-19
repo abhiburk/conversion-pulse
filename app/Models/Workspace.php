@@ -53,4 +53,14 @@ class Workspace extends Model
     {
         return $this->hasMany(Campaign::class);
     }
+
+    /**
+     * Get the tracking events received for the workspace.
+     *
+     * @return HasMany<IngestedEvent, $this>
+     */
+    public function ingestedEvents(): HasMany
+    {
+        return $this->hasMany(IngestedEvent::class);
+    }
 }
