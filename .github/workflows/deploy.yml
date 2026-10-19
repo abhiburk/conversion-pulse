@@ -57,15 +57,19 @@ jobs:
           npm run build
           rm .env
 
+      # Host keys are public; pinning them here means a server that presents any other key is refused.
       - name: Configure SSH
         env:
           DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
-          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
         run: |
           install -m 700 -d ~/.ssh
           printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          cat > ~/.ssh/known_hosts <<'KEYS'
+          [82.25.125.246]:65002 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH3Fq4VNPBK/tWYSWOuEVWkzBvYAxxOTn1YvZ6YtQ2hK
+          [82.25.125.246]:65002 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBM9X3rueXCPfi4S6JQPR8xnVuwWUFQU00proezQwBHXdS3E54R2IfXQePLH1b2az589vS4OB6DqlGjQU3nlglPQ=
+          [82.25.125.246]:65002 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQClZaZk0NO2ihTSZ3WcIetYYlrGBHFzMrw9MAgvsCB+EbQmVOkOD3JSwxeNDx0d/Ah5QmnZxsnGTM+64IASwYLSdlqRJlhVu+Grjsia6a12RDSqJKEivfjwDz7pWLZSkZMU3iw/Ih2rlkJmc/cPeUwZvuVv0U7DWmFijwnTpHwRiFrBj8EuVLQzcXmBMlOfn5OtZHqHew42RLEYAkxN93a1Y7pM3Sh1ujK2PGI+AC+YtMiGpYy365JgqMr8akKRSK/NjGJyrSEUmIZtz1cX9DkoMZxdB7jKNRxt6vIf0IqbgoCu4BKe+aIxIE1v2enen1FgYV+1GbgKiqkiNPKe5nE+YfIy3EqESIele9fF7G3JZx1447RolLHv4znU0fVbg9ygPVaGthqKXXbhfJhOwwkaP+XhvIRP+2JeR5jzXeYqtdiWVflYG1YBvhWrOQRlD7/Ifw4gCMeQq+oCBaSSlQFkUKV4MhIjGfALDUA9cQlEmocLpUXr5y8iU9f8PltZ8mE=
+          KEYS
           printf 'Host production\n  HostName %s\n  Port %s\n  User %s\n  IdentityFile ~/.ssh/deploy_key\n  IdentitiesOnly yes\n' \
             "$DEPLOY_HOST" "$DEPLOY_PORT" "$DEPLOY_USER" > ~/.ssh/config
 
