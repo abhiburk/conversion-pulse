@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\SummarizeEvents;
 use App\Enums\CampaignStatus;
+use App\Http\Requests\AnalyticsRangeRequest;
 use App\Http\Requests\StoreCampaignRequest;
 use App\Http\Requests\UpdateCampaignRequest;
 use App\Models\Campaign;
@@ -56,6 +58,25 @@ class CampaignController extends Controller
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Campaign created.')]);
 
         return to_route('campaigns.edit', $campaign);
+    }
+
+    /**
+     * Show a campaign's analytics.
+     */
+    public function show(AnalyticsRangeRequest $request, Campaign $campaign, SummarizeEvents $summarizeEvents): Response
+    {
+        Gate::authorize('view', $campaign);
+
+        $range = $request->dateRange();
+
+        return Inertia::render('campaigns/Show', [
+            'campaign' => [
+                ...$campaign->only(['id', 'public_id', 'name', 'status']),
+                'site' => $campaign->site->only(['id', 'name', 'domain']),
+            ],
+            'filters' => $range->toArray(),
+            'analytics' => $summarizeEvents->handle($request->user()->currentWorkspace, $range, $campaign),
+        ]);
     }
 
     /**

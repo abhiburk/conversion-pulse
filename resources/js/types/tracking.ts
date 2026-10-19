@@ -53,3 +53,48 @@ export type Paginated<T> = {
     prev_page_url: string | null;
     next_page_url: string | null;
 };
+
+export type RangeKey = '24h' | '7d' | '30d' | 'custom';
+
+export type AnalyticsFilters = {
+    key: RangeKey;
+    from: string;
+    to: string;
+    granularity: 'hour' | 'day';
+};
+
+export type Metrics = {
+    page_views: number;
+    impressions: number;
+    clicks: number;
+    conversions: number;
+    attributed_conversions: number;
+    click_through_rate: number | null;
+    conversion_rate: number | null;
+};
+
+export type CountMetric =
+    | 'page_views'
+    | 'impressions'
+    | 'clicks'
+    | 'conversions';
+
+export type SeriesPoint = { bucket: string } & Record<CountMetric, number>;
+
+export type Analytics = {
+    totals: Metrics;
+    previous: Metrics;
+    series: SeriesPoint[];
+};
+
+export type CampaignPerformance = {
+    id: number;
+    name: string;
+    site: string;
+    status: CampaignStatus;
+    impressions: number;
+    clicks: number;
+    conversions: number;
+    click_through_rate: number | null;
+    conversion_rate: number | null;
+};

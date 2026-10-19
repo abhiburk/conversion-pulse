@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Enums\EventType;
+use Database\Factories\EventRollupFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
@@ -23,6 +25,9 @@ use Illuminate\Support\Carbon;
  */
 class EventRollup extends Model
 {
+    /** @use HasFactory<EventRollupFactory> */
+    use HasFactory;
+
     /**
      * Indicates if the model should be timestamped.
      *
@@ -42,6 +47,16 @@ class EventRollup extends Model
             'bucket_start' => 'datetime',
             'count' => 'integer',
         ];
+    }
+
+    /**
+     * Get the site the counts belong to.
+     *
+     * @return BelongsTo<Site, $this>
+     */
+    public function site(): BelongsTo
+    {
+        return $this->belongsTo(Site::class);
     }
 
     /**

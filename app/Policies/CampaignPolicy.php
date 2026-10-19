@@ -25,6 +25,14 @@ class CampaignPolicy
     }
 
     /**
+     * Determine whether the user can view the campaign's analytics.
+     */
+    public function view(User $user, Campaign $campaign): Response
+    {
+        return $this->withinCurrentWorkspace($user, $campaign);
+    }
+
+    /**
      * Determine whether the user can update the campaign.
      */
     public function update(User $user, Campaign $campaign): Response

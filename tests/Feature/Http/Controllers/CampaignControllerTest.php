@@ -1,7 +1,9 @@
 <?php
 
 use App\Enums\CampaignStatus;
+use App\Enums\EventType;
 use App\Models\Campaign;
+use App\Models\EventRollup;
 use App\Models\Site;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -98,6 +100,35 @@ describe('store', function () {
             'name' => 'The name field is required.',
             'status' => 'The status field is required.',
         ]);
+    });
+});
+
+describe('show', function () {
+    test('the campaign page shows analytics for that campaign only', function () {
+        $this->travelTo('2026-10-19 14:00:00');
+        $user = User::factory()->withWorkspace()->create();
+        $site = Site::factory()->for($user->currentWorkspace)->create();
+        $campaign = Campaign::factory()->for($site)->create();
+        $sibling = Campaign::factory()->for($site)->create();
+        EventRollup::factory()->forCampaign($campaign, EventType::CampaignClick)->create(['bucket_start' => '2026-10-19 13:00:00', 'count' => 3]);
+        EventRollup::factory()->forCampaign($sibling, EventType::CampaignClick)->create(['bucket_start' => '2026-10-19 13:00:00', 'count' => 9]);
+
+        $response = $this->actingAs($user)->get(route('campaigns.show', ['campaign' => $campaign, 'range' => '24h']));
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('campaigns/Show')
+            ->where('campaign.id', $campaign->id)
+            ->where('filters.key', '24h')
+            ->where('analytics.totals.clicks', 3)
+            ->has('analytics.series', 24)
+        );
+    });
+
+    test('a campaign from another workspace returns 404', function () {
+        $user = User::factory()->withWorkspace()->create();
+        $otherCampaign = Campaign::factory()->create();
+
+        $this->actingAs($user)->get(route('campaigns.show', $otherCampaign))->assertNotFound();
     });
 });
 

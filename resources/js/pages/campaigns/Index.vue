@@ -51,7 +51,7 @@ defineProps<{
         <ul v-else class="divide-y rounded-xl border">
             <li v-for="campaign in campaigns" :key="campaign.id">
                 <Link
-                    :href="CampaignController.edit(campaign.id)"
+                    :href="CampaignController.show(campaign.id)"
                     class="flex flex-col gap-2 p-4 transition-colors hover:bg-muted/50 sm:flex-row sm:items-center sm:justify-between"
                 >
                     <div class="min-w-0">

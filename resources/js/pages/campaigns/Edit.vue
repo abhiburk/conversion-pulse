@@ -27,8 +27,9 @@ setLayoutProps({
         { title: 'Campaigns', href: CampaignController.index() },
         {
             title: props.campaign.name,
-            href: CampaignController.edit(props.campaign.id),
+            href: CampaignController.show(props.campaign.id),
         },
+        { title: 'Edit', href: CampaignController.edit(props.campaign.id) },
     ],
 });
 </script>
