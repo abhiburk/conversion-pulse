@@ -3,14 +3,14 @@ import { Link } from '@inertiajs/vue3';
 import {
     Activity,
     BellRing,
-    BookOpen,
-    FolderGit2,
     Globe,
     LayoutGrid,
     Megaphone,
+    Store,
 } from '@lucide/vue';
 import AlertController from '@/actions/App/Http/Controllers/AlertController';
 import CampaignController from '@/actions/App/Http/Controllers/CampaignController';
+import DemoStoreController from '@/actions/App/Http/Controllers/DemoStoreController';
 import EventPipelineController from '@/actions/App/Http/Controllers/EventPipelineController';
 import SiteController from '@/actions/App/Http/Controllers/SiteController';
 import AppLogo from '@/components/AppLogo.vue';
@@ -59,14 +59,9 @@ const mainNavItems: NavItem[] = [
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Repository',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: FolderGit2,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
+        title: 'Demo store',
+        href: DemoStoreController.url(),
+        icon: Store,
     },
 ];
 </script>

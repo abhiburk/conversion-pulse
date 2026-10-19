@@ -1,11 +1,12 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/vue-starter-kit",
+    "name": "conversion-pulse/app",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "Campaign tracking reliability and observability: event ingestion, analytics and alerts.",
     "keywords": [
         "laravel",
-        "framework"
+        "analytics",
+        "tracking"
     ],
     "license": "MIT",
     "require": {
