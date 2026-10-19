@@ -42,7 +42,7 @@
 </head>
 <body>
     <div class="notice">
-        Demo store for <strong>Conversion Pulse</strong>. Every interaction here sends real events through the JS SDK.
+        Demo store for <strong>Conversion Pulse</strong>. Every interaction here sends real events through the SDK.
         <a href="{{ route('dashboard') }}">Open the dashboard</a>
     </div>
 
