@@ -3,12 +3,13 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vp build",
-        "build:ssr": "vp build && vp build --ssr",
+        "build": "vp build && vp build sdk",
+        "build:ssr": "vp build && vp build --ssr && vp build sdk",
         "dev": "vp dev",
         "check": "vp check",
         "check:fix": "vp check --fix",
-        "types:check": "vue-tsc --noEmit"
+        "types:check": "vue-tsc --noEmit",
+        "test:sdk": "vp test sdk"
     },
     "dependencies": {
         "@inertiajs/vite": "^3.0.0",

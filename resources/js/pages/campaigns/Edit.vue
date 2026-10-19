@@ -16,6 +16,12 @@ const props = defineProps<{
     statuses: CampaignStatus[];
 }>();
 
+const usageExample = [
+    `ConversionPulse.impression('${props.campaign.public_id}');`,
+    `ConversionPulse.click('${props.campaign.public_id}');`,
+    `ConversionPulse.conversion({ campaignId: '${props.campaign.public_id}', properties: { value: 49 } });`,
+].join('\n');
+
 setLayoutProps({
     breadcrumbs: [
         { title: 'Campaigns', href: CampaignController.index() },

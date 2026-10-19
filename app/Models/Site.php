@@ -37,6 +37,29 @@ class Site extends Model
     }
 
     /**
+     * Determine whether a browser Origin header may send events for this site.
+     *
+     * The site's domain and any of its subdomains are allowed. Requests without an Origin header come from non-browser clients and are allowed, since the site key is public and the origin can be forged outside a browser anyway.
+     */
+    public function allowsOrigin(?string $origin): bool
+    {
+        if ($origin === null || $origin === '') {
+            return true;
+        }
+
+        $host = parse_url($origin, PHP_URL_HOST);
+
+        if (! is_string($host)) {
+            return false;
+        }
+
+        $port = parse_url($origin, PHP_URL_PORT);
+        $originHost = Str::lower($host).($port !== null ? ":{$port}" : '');
+
+        return $originHost === $this->domain || Str::endsWith($originHost, ".{$this->domain}");
+    }
+
+    /**
      * Get the workspace that owns the site.
      *
      * @return BelongsTo<Workspace, $this>

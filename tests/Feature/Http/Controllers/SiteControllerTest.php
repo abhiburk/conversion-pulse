@@ -102,15 +102,16 @@ describe('store', function () {
 });
 
 describe('edit', function () {
-    test('the edit page shows the site key', function () {
+    test('the edit page shows the site key and its tracking snippet', function () {
         $user = User::factory()->withWorkspace()->create();
-        $site = Site::factory()->for($user->currentWorkspace)->create();
+        $site = Site::factory()->for($user->currentWorkspace)->create(['site_key' => 'pk_abc123']);
 
         $response = $this->actingAs($user)->get(route('sites.edit', $site));
 
         $response->assertInertia(fn (Assert $page) => $page
             ->component('sites/Edit')
-            ->where('site.site_key', $site->site_key)
+            ->where('site.site_key', 'pk_abc123')
+            ->where('snippet', '<script src="'.asset('sdk/pulse.js').'" data-site-key="pk_abc123" defer></script>')
         );
     });
 

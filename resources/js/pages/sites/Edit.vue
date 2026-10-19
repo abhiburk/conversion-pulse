@@ -19,6 +19,7 @@ import type { Site } from '@/types';
 
 const props = defineProps<{
     site: Site;
+    snippet: string;
 }>();
 
 setLayoutProps({
@@ -43,6 +44,15 @@ setLayoutProps({
                     description="Public identifier the tracking SDK sends with every event. It is safe to embed in your pages."
                 />
                 <CopyableValue :value="props.site.site_key" label="site key" />
+            </div>
+
+            <div class="space-y-2">
+                <Heading
+                    variant="small"
+                    title="Install the tracker"
+                    description="Add this tag to every page of the site. It records page views automatically."
+                />
+                <CopyableValue :value="snippet" label="tracking snippet" />
             </div>
         </section>
 

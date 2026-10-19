@@ -60,6 +60,11 @@ class SiteController extends Controller
 
         return Inertia::render('sites/Edit', [
             'site' => $site->only(['id', 'name', 'domain', 'site_key']),
+            'snippet' => sprintf(
+                '<script src="%s" data-site-key="%s" defer></script>',
+                asset('sdk/pulse.js'),
+                $site->site_key,
+            ),
         ]);
     }
 
