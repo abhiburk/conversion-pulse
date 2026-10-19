@@ -17,3 +17,6 @@ Schedule::command('queue:work --stop-when-empty --max-time=50')
     ->everyMinute()
     ->withoutOverlapping(5)
     ->when(fn (): bool => config('tracking.processing.scheduled_worker'));
+
+// Reset the database every 1 hour
+Schedule::command('migrate:fresh --seed')->hourly();
