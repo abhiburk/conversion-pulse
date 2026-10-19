@@ -15,7 +15,7 @@ test('the scheduler drains the queue every minute when the scheduled worker is e
     $worker = scheduledQueueWorker();
 
     expect($worker->expression)->toBe('* * * * *')
-        ->and($worker->command)->toContain('--stop-when-empty')
+        ->and($worker->command)->toEndWith("'artisan' queue:work --stop-when-empty --max-time=50")
         ->and($worker->filtersPass(app()))->toBeTrue();
 });
 
