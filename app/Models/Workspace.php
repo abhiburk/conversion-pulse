@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -31,5 +32,25 @@ class Workspace extends Model
         return $this->belongsToMany(User::class)
             ->withPivot('role')
             ->withTimestamps();
+    }
+
+    /**
+     * Get the sites tracked by the workspace.
+     *
+     * @return HasMany<Site, $this>
+     */
+    public function sites(): HasMany
+    {
+        return $this->hasMany(Site::class);
+    }
+
+    /**
+     * Get the campaigns in the workspace.
+     *
+     * @return HasMany<Campaign, $this>
+     */
+    public function campaigns(): HasMany
+    {
+        return $this->hasMany(Campaign::class);
     }
 }
