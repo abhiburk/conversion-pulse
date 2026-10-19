@@ -86,6 +86,8 @@ Run at least one `php artisan queue:work` process and the scheduler (`php artisa
 
 Hosts without long-running processes (such as Hostinger shared hosting) can run the MVP on SQLite and the database queue. Set `TRACKING_SCHEDULED_QUEUE_WORKER=true` and add one cron entry for `php artisan schedule:run` every minute; the scheduler then drains the queue each minute, so events are processed within about a minute instead of seconds. Build assets locally with `npm run build` and upload `public/build` and `public/sdk`, since shared hosts usually have no Node. Keep SQLite rather than MySQL: the alerts table relies on a partial unique index, which MySQL does not support.
 
+The demo at https://pulse.abhiburk.com deploys this way. `.github/workflows/deploy.yml` runs after the `tests` workflow passes on `main` (or manually): it builds the assets, uploads the code over SSH with `rsync` (never touching the server's `.env`, SQLite database, `storage` or `vendor`), then runs `composer install --no-dev`, `migrate --force` and `optimize` behind maintenance mode. It needs two repository secrets: `DEPLOY_SSH_KEY` (a dedicated private key authorized on the server) and `DEPLOY_KNOWN_HOSTS` (the server's host key line).
+
 ## Documentation
 
 - [API contract](docs/api.md): the ingestion endpoint, payloads, responses and SDK delivery semantics.
