@@ -23,6 +23,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Event Processing
+    |--------------------------------------------------------------------------
+    |
+    | Hosts that cannot keep a queue worker running (shared hosting) can let
+    | the scheduler drain the queue every minute instead. Events are then
+    | processed within about a minute rather than within seconds.
+    |
+    */
+
+    'processing' => [
+        'scheduled_worker' => (bool) env('TRACKING_SCHEDULED_QUEUE_WORKER', false),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Monitoring Alerts
     |--------------------------------------------------------------------------
     |

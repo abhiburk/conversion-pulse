@@ -82,6 +82,10 @@ CACHE_STORE=redis               # also backs rate limiting and scheduler locks
 
 Run at least one `php artisan queue:work` process and the scheduler (`php artisan schedule:run` every minute). `npm run build` builds both the dashboard and the SDK (`public/sdk/pulse.js`). Ingestion and alert thresholds live in `config/tracking.php` and can be overridden with environment variables.
 
+### Shared hosting
+
+Hosts without long-running processes (such as Hostinger shared hosting) can run the MVP on SQLite and the database queue. Set `TRACKING_SCHEDULED_QUEUE_WORKER=true` and add one cron entry for `php artisan schedule:run` every minute; the scheduler then drains the queue each minute, so events are processed within about a minute instead of seconds. Build assets locally with `npm run build` and upload `public/build` and `public/sdk`, since shared hosts usually have no Node. Keep SQLite rather than MySQL: the alerts table relies on a partial unique index, which MySQL does not support.
+
 ## Documentation
 
 - [API contract](docs/api.md): the ingestion endpoint, payloads, responses and SDK delivery semantics.

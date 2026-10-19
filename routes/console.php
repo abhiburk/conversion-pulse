@@ -12,3 +12,8 @@ Artisan::command('inspire', function () {
 
 Schedule::command(DispatchStalePendingEvents::class)->everyFiveMinutes()->withoutOverlapping();
 Schedule::command(RunAlertChecks::class)->everyFifteenMinutes()->withoutOverlapping(30);
+
+Schedule::command('queue:work', ['--stop-when-empty' => true, '--max-time' => 50])
+    ->everyMinute()
+    ->withoutOverlapping(5)
+    ->when(fn (): bool => config('tracking.processing.scheduled_worker'));
