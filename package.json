@@ -9,7 +9,7 @@
         "check": "vp check",
         "check:fix": "vp check --fix",
         "types:check": "vue-tsc --noEmit",
-        "test:sdk": "vp test sdk"
+        "test:sdk": "vp test --root sdk"
     },
     "dependencies": {
         "@inertiajs/vite": "^3.0.0",
